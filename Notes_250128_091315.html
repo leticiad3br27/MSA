@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+<head>
+    <meta charset="UTF-8">
+    <title>Meio-Sangue Alerta Brasil - Afinidade Divina</title>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=UnifrakturMaguntia&family=Cinzel+Decorative&display=swap');
+
+        :root {
+            --ouro: #FFD700;
+            --roxo-profundo: #2A0A3A;
+            --bronze: #CD7F32;
+        }
+
+        body {
+            margin: 0;
+            background: linear-gradient(45deg, var(--roxo-profundo), #1a1a1a),
+                        url('https://i.imgur.com/Yj4G9q8.png');
+            color: var(--ouro);
+            font-family: 'Cinzel Decorative', cursive;
+            min-height: 100vh;
+            overflow-x: hidden;
+        }
+
+        .container {
+            max-width: 800px;
+            margin: 0 auto;
+            padding: 2rem;
+            position: relative;
+        }
+
+        .escudo-olimpico {
+            width: 200px;
+            margin: 0 auto;
+            animation: rotacao 20s linear infinite;
+        }
+
+        .questionario {
+            background: rgba(0, 0, 0, 0.7);
+            border: 3px solid var(--bronze);
+            border-radius: 15px;
+            padding: 2rem;
+            margin: 2rem 0;
+            position: relative;
+            display: none;
+        }
+
+        .pergunta {
+            font-size: 1.4rem;
+            text-align: center;
+            margin-bottom: 2rem;
+            text-shadow: 2px 2px 4px rgba(0,0,0,0.5);
+        }
+
+        .opcoes {
+            display: grid;
+            gap: 1rem;
+        }
+
+        .opcao {
+            background: rgba(255, 215, 0, 0.1);
+            border: 1px solid var(--bronze);
+            padding: 1rem;
+            cursor: pointer;
+            transition: all 0.3s ease;
+            border-radius: 8px;
+        }
+
+        .opcao:hover {
+            background: rgba(255, 215, 0, 0.3);
+            transform: scale(1.05);
+        }
+
+        #resultado {
+            text-align: center;
+            display: none;
+        }
+
+        .deus-resultado {
+            font-size: 2.5rem;
+            color: var(--ouro);
+            font-family: 'UnifrakturMaguntia', cursive;
+            margin: 2rem 0;
+        }
+
+        @keyframes rotacao {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+
+        .progresso {
+            height: 5px;
+            background: var(--bronze);
+            width: 0%;
+            transition: width 0.5s ease;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <img src="https://i.imgur.com/5QRvV7s.png" class="escudo-olimpico" alt="Escudo Olímpico">
+        <h1 style="text-align: center;">Descubra sua Linhagem Divina</h1>
+        
+        <div class="questionario" id="questionario">
+            <div class="progresso" id="progresso"></div>
+            <div class="pergunta" id="pergunta"></div>
+            <div class="opcoes" id="opcoes"></div>
+        </div>
+
+        <div id="resultado">
+            <div class="deus-resultado" id="deusResultado"></div>
+            <div id="descricao"></div>
+            <button onclick="reiniciarQuiz()">Tentar Novamente</button>
+        </div>
+    </div>
+
+    <script>
+        const deuses = {
+            Zeus: { pontos: 0, atributos: ['liderança', 'tempestade', 'justiça'] },
+            Poseidon: { pontos: 0, atributos: ['adaptabilidade', 'profundidade', 'mistério'] },
+            Hades: { pontos: 0, atributos: ['resiliência', 'mistério', 'persistência'] },
+            Atena: { pontos: 0, atributos: ['sabedoria', 'estratégia', 'criatividade'] },
+            Ares: { pontos: 0, atributos: ['coragem', 'determinação', 'paixão'] },
+            Afrodite: { pontos: 0, atributos: ['empatia', 'beleza', 'harmonia'] },
+            Hefesto: { pontos: 0, atributos: ['criatividade', 'paciência', 'dedicação'] },
+            Apolo: { pontos: 0, atributos: ['arte', 'cura', 'precisão'] },
+            Ártemis: { pontos: 0, atributos: ['foco', 'liberdade', 'natureza'] },
+            Dionísio: { pontos: 0, atributos: ['adaptabilidade', 'celebração', 'transformação'] },
+            Hermes: { pontos: 0, atributos: ['agilidade', 'comunicação', 'curiosidade'] },
+            Deméter: { pontos: 0, atributos: ['nutrição', 'ciclos', 'persistência'] },
+            Héstia: { pontos: 0, atributos: ['hospitalidade', 'conforto', 'essência'] },
+            Nix: { pontos: 0, atributos: ['mistério', 'introspecção', 'noite'] },
+            Hécate: { pontos: 0, atributos: ['magia', 'transição', 'mistério'] }
+        };
+
+        const perguntas = [
+            {
+                pergunta: "Em um conflito, sua principal arma é:",
+                opcoes: [
+                    { texto: "Estratégia bem planejada", atribui: ['Atena', 'Hecate'] },
+                    { texto: "Força bruta e determinação", atribui: ['Ares', 'Zeus'] },
+                    { texto: "Adaptação às circunstâncias", atribui: ['Poseidon', 'Hermes'] },
+                    { texto: "Recursos inesperados", atribui: ['Hefesto', 'Hades'] }
+                ]
+            },
+            {
+                pergunta: "Sua maior virtude é:",
+                opcoes: [
+                    { texto: "Sabedoria prática", atribui: ['Atena', 'Apolo'] },
+                    { texto: "Resiliência emocional", atribui: ['Hades', 'Deméter'] },
+                    { texto: "Criatividade inventiva", atribui: ['Hefesto', 'Dionísio'] },
+                    { texto: "Empatia profunda", atribui: ['Afrodite', 'Héstia'] }
+                ]
+            },
+            {
+                pergunta: "Seu elemento natural:",
+                opcoes: [
+                    { texto: "Fogo transformador", atribui: ['Hefesto', 'Zeus'] },
+                    { texto: "Água profunda", atribui: ['Poseidon', 'Ártemis'] },
+                    { texto: "Terra fértil", atribui: ['Deméter', 'Héstia'] },
+                    { texto: "Ar etéreo", atribui: ['Hermes', 'Nix'] }
+                ]
+            },
+            {
+                pergunta: "Sua abordagem para desafios:",
+                opcoes: [
+                    { texto: "Análise racional", atribui: ['Atena', 'Apolo'] },
+                    { texto: "Intuição emocional", atribui: ['Afrodite', 'Hécate'] },
+                    { texto: "Ação imediata", atribui: ['Ares', 'Zeus'] },
+                    { texto: "Adaptação criativa", atribui: ['Hermes', 'Dionísio'] }
+                ]
+            },
+            {
+                pergunta: "No Olimpo, você seria:",
+                opcoes: [
+                    { texto: "Conselheiro estratégico", atribui: ['Atena', 'Hécate'] },
+                    { texto: "Protetor dos fracos", atribui: ['Héstia', 'Deméter'] },
+                    { texto: "Artífice de maravilhas", atribui: ['Hefesto', 'Apolo'] },
+                    { texto: "Explorador de fronteiras", atribui: ['Hermes', 'Ártemis'] }
+                ]
+            }
+        ];
+
+        let perguntaAtual = 0;
+
+        function iniciarQuiz() {
+            document.querySelector('.escudo-olimpico').style.display = 'none';
+            document.getElementById('questionario').style.display = 'block';
+            mostrarPergunta();
+        }
+
+        function mostrarPergunta() {
+            const pergunta = perguntas[perguntaAtual];
+            document.getElementById('pergunta').textContent = pergunta.pergunta;
+            const opcoesDiv = document.getElementById('opcoes');
+            opcoesDiv.innerHTML = '';
+            
+            pergunta.opcoes.forEach((opcao, index) => {
+                const botao = document.createElement('div');
+                botao.className = 'opcao';
+                botao.textContent = opcao.texto;
+                botao.onclick = () => selecionarResposta(opcao.atribui);
+                opcoesDiv.appendChild(botao);
+            });
+
+            atualizarProgresso();
+        }
+
+        function selecionarResposta(deusesAtribuidos) {
+            deusesAtribuidos.forEach(deus => {
+                deuses[deus].pontos += 1;
+            });
+
+            perguntaAtual++;
+            if(perguntaAtual < perguntas.length) {
+                mostrarPergunta();
+            } else {
+                mostrarResultado();
+            }
+        }
+
+        function atualizarProgresso() {
+            const progresso = (perguntaAtual / perguntas.length) * 100;
+            document.getElementById('progresso').style.width = `${progresso}%`;
+        }
+
+        function mostrarResultado() {
+            document.getElementById('questionario').style.display = 'none';
+            document.getElementById('resultado').style.display = 'block';
+            
+            const deusResultado = Object.entries(deuses).reduce((a, b) => a[1].pontos > b[1].pontos ? a : b)[0];
+            document.getElementById('deusResultado').textContent = deusResultado;
+            
+            const descricao = document.getElementById('descricao');
+            descricao.innerHTML = `
+                <h3>Atributos Chave:</h3>
+                <p>${deuses[deusResultado].atributos.join(', ')}</p>
+                <h3>Domínio Divino:</h3>
+                <p>${obterDominio(deusResultado)}</p>
+            `;
+        }
+
+        function obterDominio(deus) {
+            const dominios = {
+                Zeus: "Céus e Governo Divino",
+                Poseidon: "Mares e Terremotos",
+                Hades: "Submundo e Riquezas",
+                Atena: "Sabedoria e Guerra Estratégica",
+                Ares: "Guerra e Coragem",
+                Afrodite: "Amor e Beleza",
+                Hefesto: "Metalurgia e Fogo",
+                Apolo: "Sol e Artes",
+                Ártemis: "Lua e Caça",
+                Dionísio: "Vinho e Êxtase",
+                Hermes: "Viagens e Comunicação",
+                Deméter: "Agricultura e Estações",
+                Héstia: "Lar e Sacrifício",
+                Nix: "Noite Primordial",
+                Hécate: "Encruzilhadas e Magia"
+            };
+            return dominios[deus];
+        }
+
+        function reiniciarQuiz() {
+            Object.keys(deuses).forEach(deus => deuses[deus].pontos = 0);
+            perguntaAtual = 0;
+            document.getElementById('resultado').style.display = 'none';
+            iniciarQuiz();
+        }
+
+        // Iniciar quiz automaticamente
+        iniciarQuiz();
+    </script>
+</body>
+</html>
